@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -36,16 +37,20 @@ export function useCart() {
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartLine[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const hydrated = useRef(false);
 
-  // hydrate from localStorage
+  // hydrate from localStorage (uma vez)
   useEffect(() => {
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) setItems(JSON.parse(raw));
     } catch {}
+    hydrated.current = true;
   }, []);
 
+  // persiste só depois de hidratar (não sobrescreve o storage no 1º render)
   useEffect(() => {
+    if (!hydrated.current) return;
     try {
       localStorage.setItem(KEY, JSON.stringify(items));
     } catch {}
@@ -57,7 +62,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (found) return prev.map((l) => (l.id === id ? { ...l, qty: l.qty + 1 } : l));
       return [...prev, { id, qty: 1 }];
     });
-    setIsOpen(true);
+    // quem abre o drawer é o ProductCard (após a aura tocar) — assim o feedback
+    // visual da aura não fica escondido atrás do carrinho.
   }, []);
 
   const inc = useCallback((id: string) => {

@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import type { Product } from "@/lib/products";
 import { waLink, buyMessage } from "@/lib/whatsapp";
 import { ratingFor, installments, discountPct, freeShipping } from "@/lib/format";
+import { auraFor } from "@/lib/aura";
 import { useCart } from "./CartProvider";
-import { CardFx, fxFor } from "./CardFx";
 
 function Stars({ value, hue }: { value: number; hue: string }) {
   return (
@@ -32,13 +32,29 @@ function Stars({ value, hue }: { value: number; hue: string }) {
 export function ProductCard({ product }: { product: Product }) {
   const ref = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
-  const [justAdded, setJustAdded] = useState(false);
-  const fx = fxFor(`${product.anime} ${product.character} ${product.name}`);
+  const [burst, setBurst] = useState(false);
+  const aura = auraFor(product);
+
+  // partículas de energia que sobem na cor do personagem ao adicionar
+  const sparks = useMemo(
+    () =>
+      Array.from({ length: 16 }, () => ({
+        x: 4 + Math.random() * 92,
+        size: 3 + Math.random() * 5,
+        rise: 300 + Math.random() * 240,
+        sway: (Math.random() - 0.5) * 46,
+        dur: 1.0 + Math.random() * 0.65,
+        delay: Math.random() * 0.35,
+      })),
+    []
+  );
 
   const handleAdd = () => {
     add(product.id);
-    setJustAdded(true);
-    window.setTimeout(() => setJustAdded(false), 1400);
+    setBurst(true);
+    window.setTimeout(() => setBurst(false), 1500);
+    // abre o carrinho depois da aura tocar, pra o usuário ver o produto dentro
+    window.setTimeout(() => open(), 820);
   };
 
   const mx = useMotionValue(0.5);
@@ -60,7 +76,8 @@ export function ProductCard({ product }: { product: Product }) {
     my.set((e.clientY - r.top) / r.height);
   };
 
-  const { add } = useCart();
+  const { add, open, items } = useCart();
+  const inCart = items.some((l) => l.id === product.id);
   const href = waLink(buyMessage(product.name, product.anime, product.price));
   const disc = discountPct(product.price, product.oldPrice);
   const { stars, reviews } = ratingFor(product.id);
@@ -70,26 +87,104 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <motion.div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => {
-        setHovered(false);
-        mx.set(0.5);
-        my.set(0.5);
-      }}
-      style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000 }}
-      transition={{ type: "spring", stiffness: 200, damping: 20 }}
-      className="group relative flex h-[480px] flex-col overflow-hidden rounded-3xl border border-[color-mix(in_srgb,var(--fg)_10%,transparent)] glass [transform-style:preserve-3d]"
+      className="relative h-[480px]"
+      animate={burst ? { scale: [1, 1.05, 0.985, 1.02, 1], x: [0, -4, 4, -2, 0] } : { scale: 1, x: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
     >
+      {/* aura persistente enquanto o item está no carrinho */}
+      {inCart && !burst && (
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute -inset-px rounded-3xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0.5, 0.85, 0.5] }}
+          transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          style={{ boxShadow: `0 0 0 1px ${aura}66, 0 0 26px -4px ${aura}` }}
+        />
+      )}
+
+      {/* burst de aura ao adicionar (cor do personagem) */}
+      <AnimatePresence>
+        {burst && (
+          <>
+            <motion.div
+              key="aura-glow"
+              aria-hidden
+              className="pointer-events-none absolute -inset-3 rounded-[2rem]"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: [0, 1, 0.7, 0], scale: [0.9, 1.05, 1.02, 1.08] }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              style={{ boxShadow: `0 0 70px 10px ${aura}, inset 0 0 46px ${aura}`, border: `2px solid ${aura}` }}
+            />
+            <motion.div
+              key="aura-ring"
+              aria-hidden
+              className="pointer-events-none absolute inset-0 rounded-3xl"
+              initial={{ opacity: 0.85, scale: 0.92 }}
+              animate={{ opacity: 0, scale: 1.32 }}
+              transition={{ duration: 0.95, ease: "easeOut" }}
+              style={{ border: `2px solid ${aura}` }}
+            />
+            {/* flash radial vindo de baixo (energia subindo) */}
+            <motion.div
+              key="aura-flash"
+              aria-hidden
+              className="pointer-events-none absolute inset-0 rounded-3xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.55, 0] }}
+              transition={{ duration: 1.1, ease: "easeOut" }}
+              style={{ background: `radial-gradient(120% 80% at 50% 100%, ${aura}, transparent 65%)`, mixBlendMode: "screen" }}
+            />
+            {/* chamas de energia subindo na cor do personagem */}
+            <div key="aura-sparks" aria-hidden className="pointer-events-none absolute inset-0">
+              {sparks.map((s, i) => (
+                <motion.span
+                  key={i}
+                  className="absolute bottom-2"
+                  style={{ left: `${s.x}%`, transformOrigin: "center bottom", filter: `drop-shadow(0 0 ${s.size * 1.7}px ${aura})` }}
+                  initial={{ opacity: 0, y: 0, scaleY: 0.5, scaleX: 0.7 }}
+                  animate={{
+                    opacity: [0, 1, 0.9, 0],
+                    y: [-6, -s.rise],
+                    x: [0, s.sway, 0],
+                    scaleY: [0.6, 1.25, 0.95, 0.4],
+                    scaleX: [0.75, 1, 0.85, 0.6],
+                  }}
+                  transition={{ duration: s.dur, delay: s.delay, ease: "easeOut" }}
+                >
+                  <svg width={s.size * 2.2} height={s.size * 3.6} viewBox="0 0 20 32" aria-hidden>
+                    <path d="M10 0 C3 12 4 21 10 32 C16 21 17 12 10 0 Z" fill={aura} />
+                    <path d="M10 8 C6.5 15 7 22 10 28 C13 22 13.5 15 10 8 Z" fill="#ffffff" opacity="0.55" />
+                  </svg>
+                </motion.span>
+              ))}
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        ref={ref}
+        onMouseMove={onMove}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => {
+          setHovered(false);
+          mx.set(0.5);
+          my.set(0.5);
+        }}
+        style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-[color-mix(in_srgb,var(--fg)_10%,transparent)] glass [transform-style:preserve-3d]"
+      >
       {/* glow border on hover */}
       <div
         className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{ boxShadow: `inset 0 0 0 1px ${product.hue}88, 0 0 40px -8px ${product.hue}` }}
       />
 
-      {/* ---- display stage ---- */}
-      <div className="relative flex-1 overflow-hidden">
+      {/* ---- display stage (decorativo: não captura cliques; o 3D translateZ
+              da imagem interceptava os botões em browsers com GPU) ---- */}
+      <div className="pointer-events-none relative flex-1 overflow-hidden">
         {/* radial pedestal glow */}
         <div
           className="absolute inset-0 transition-opacity duration-500"
@@ -161,9 +256,6 @@ export function ProductCard({ product }: { product: Product }) {
           animate={hovered ? { x: ["-120%", "120%"] } : { x: "-120%" }}
           transition={{ duration: 1.1, ease: "easeInOut", repeat: hovered ? Infinity : 0, repeatDelay: 0.7 }}
         />
-
-        {/* efeito temático por série (água/raios/folhas) — só ao passar o mouse ou adicionar */}
-        <CardFx kind={fx} active={hovered || justAdded} />
       </div>
 
       {/* ---- info ---- */}
@@ -205,14 +297,30 @@ export function ProductCard({ product }: { product: Product }) {
           <motion.button
             onClick={handleAdd}
             whileTap={{ scale: 0.96 }}
-            className="flex flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white transition-shadow"
-            style={{ background: "var(--accent)", boxShadow: "0 0 24px -8px var(--accent)" }}
+            animate={burst ? { scale: [1, 1.04, 1] } : { scale: 1 }}
+            className="flex flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white transition-colors"
+            style={{
+              background: burst ? aura : "var(--accent)",
+              color: burst ? "#0a0a0a" : "#fff",
+              boxShadow: `0 0 24px -8px ${burst ? aura : "var(--accent)"}`,
+            }}
           >
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-            </svg>
-            Adicionar
+            {burst ? (
+              <>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Adicionado!
+              </>
+            ) : (
+              <>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                </svg>
+                Adicionar
+              </>
+            )}
           </motion.button>
           <motion.a
             href={href}
@@ -229,6 +337,7 @@ export function ProductCard({ product }: { product: Product }) {
           </motion.a>
         </div>
       </div>
+      </motion.div>
     </motion.div>
   );
 }
