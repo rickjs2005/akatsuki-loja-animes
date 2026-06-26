@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #050505;
+  --fg: #f3eaea;
+  --accent: #c81a1a;
+  --transition-progress: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 1.2s ease, color 1.2s ease;
+}
+
+body[data-theme="light"] {
+  --bg: #eaf4ff;
+  --fg: #06223f;
+  --accent: #2b7bff;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 60%, transparent);
+  border-radius: 8px;
+}
+
+.text-glow {
+  text-shadow: 0 0 18px color-mix(in srgb, var(--accent) 70%, transparent),
+    0 0 42px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.glass {
+  background: color-mix(in srgb, var(--bg) 45%, transparent);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+}
+
+/* Liquid underline for nav */
+.nav-link {
+  position: relative;
+  display: inline-block;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  border-radius: 2px;
+}
+.nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Ripple */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+.ripple > span.ripple-dot {
+  position: absolute;
+  border-radius: 9999px;
+  transform: scale(0);
+  animation: ripple-anim 0.7s linear;
+  background: color-mix(in srgb, var(--fg) 35%, transparent);
+  pointer-events: none;
+}
+@keyframes ripple-anim {
+  to {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateY(48px) scale(0.97);
+  will-change: transform, opacity, filter;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Cursor custom (Esfera do Dragão) — só em telas com mouse */
+html.db-cursor,
+html.db-cursor * {
+  cursor: none !important;
+}
+
+/* ===== Efeitos temáticos dos cards ===== */
+/* Água / mar (One Piece) */
+@keyframes fx-wave {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes fx-foam {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+}
+@keyframes fx-spray {
+  0% { transform: translateY(0) scale(0.4); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: translateY(-46px) scale(1); opacity: 0; }
+}
+@keyframes fx-caustic {
+  0%, 100% { opacity: 0.12; transform: translateX(-6px); }
+  50% { opacity: 0.3; transform: translateX(6px); }
+}
+
+/* Folhas (Naruto) */
+@keyframes fx-fall {
+  0% { transform: translateY(-26px); opacity: 0; }
+  10% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { transform: translateY(440px); opacity: 0; }
+}
+@keyframes fx-sway {
+  0%, 100% { transform: translateX(-16px); }
+  50% { transform: translateX(16px); }
+}
+@keyframes fx-spin {
+  0% { transform: rotate(0deg) scaleX(1); }
+  50% { transform: rotate(180deg) scaleX(-1); }
+  100% { transform: rotate(360deg) scaleX(1); }
+}
+
+/* Super Saiyajin (Dragon Ball) */
+@keyframes fx-flame {
+  0% { transform: translateY(8px) scaleY(0.8) scaleX(1); opacity: 0.25; }
+  50% { transform: translateY(-6px) scaleY(1.2) scaleX(0.92); opacity: 0.95; }
+  100% { transform: translateY(8px) scaleY(0.8) scaleX(1); opacity: 0.25; }
+}
+@keyframes fx-streak {
+  0% { transform: translateY(40px) scaleY(0.4); opacity: 0; }
+  30% { opacity: 0.95; }
+  100% { transform: translateY(-70px) scaleY(1); opacity: 0; }
+}
+@keyframes fx-flash {
+  0%, 100% { opacity: 0; }
+  46%, 54% { opacity: 1; }
+}
+/* raio crepitando: pisca várias vezes por ciclo */
+@keyframes fx-bolt {
+  0% { opacity: 0; }
+  4% { opacity: 1; }
+  9% { opacity: 0.15; }
+  13% { opacity: 1; }
+  20% { opacity: 0; }
+  52% { opacity: 0; }
+  56% { opacity: 1; }
+  60% { opacity: 0.2; }
+  64% { opacity: 1; }
+  70% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes fx-bolt-glow {
+  0%, 100% { opacity: 0; }
+  4%, 13%, 56%, 64% { opacity: 0.85; }
+}
+@keyframes fx-aura {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.03); }
+}
