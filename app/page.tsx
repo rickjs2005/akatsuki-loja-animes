@@ -12,6 +12,7 @@ import { Benefits } from "@/components/sections/Benefits";
 import { Products } from "@/components/sections/Products";
 import { Domain } from "@/components/sections/Domain";
 import { Ritual } from "@/components/sections/Ritual";
+import { usePerfMode } from "@/components/PerfModeProvider";
 
 // 3D scene: client-only, lazily loaded for code-splitting / performance
 const BackgroundCanvas = dynamic(
@@ -20,9 +21,22 @@ const BackgroundCanvas = dynamic(
 );
 
 export default function Home() {
+  const { lite } = usePerfMode();
+
   return (
     <main id="top" className="relative">
-      <BackgroundCanvas />
+      {/* fundo CSS temático (sempre presente). No modo full fica atrás do WebGL
+          opaco; no modo lite é o fundo principal, junto da atmosfera 2D. */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-[12]"
+        style={{
+          background:
+            "radial-gradient(120% 90% at 80% -10%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 55%), radial-gradient(120% 90% at 0% 110%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%), var(--bg)",
+        }}
+      />
+
+      {/* cena 3D só quando o aparelho aguenta (modo full) */}
+      {!lite && <BackgroundCanvas />}
       <AtmosphereLayer />
       <TransitionOverlay />
       <DragonBallCursor />

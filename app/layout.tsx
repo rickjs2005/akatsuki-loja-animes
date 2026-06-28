@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cinzel, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PerfModeProvider } from "@/components/PerfModeProvider";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { CartProvider } from "@/components/CartProvider";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -130,10 +131,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <ThemeProvider>
-          <CartProvider>
-            <SmoothScroll>{children}</SmoothScroll>
-            <CartDrawer />
-          </CartProvider>
+          <PerfModeProvider>
+            <CartProvider>
+              <SmoothScroll>{children}</SmoothScroll>
+              <CartDrawer />
+            </CartProvider>
+          </PerfModeProvider>
         </ThemeProvider>
       </body>
     </html>
