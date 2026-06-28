@@ -106,7 +106,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   alt={product.name}
                   sizes="(max-width:1024px) 100vw, 50vw"
                   priority
-                  wrapperClassName="absolute inset-0"
+                  wrapperClassName="h-full w-full"
                   className="object-contain p-8 drop-shadow-[0_24px_44px_rgba(0,0,0,0.5)]"
                 />
               ) : (
@@ -232,7 +232,7 @@ export function ProductDetail({ product }: { product: Product }) {
                         src={p.image}
                         alt={p.name}
                         sizes="25vw"
-                        wrapperClassName="absolute inset-0"
+                        wrapperClassName="h-full w-full"
                         className="object-contain p-2"
                       />
                     ) : (
