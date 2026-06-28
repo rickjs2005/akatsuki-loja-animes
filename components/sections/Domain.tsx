@@ -55,7 +55,7 @@ export function Domain() {
               >
                 {f.k}
               </span>
-              <h3 className="mt-5 font-display text-xl font-semibold">{f.title}</h3>
+              <h3 className="mt-5 text-xl font-semibold tracking-tight">{f.title}</h3>
               <p className="mt-3 text-sm leading-relaxed opacity-75">{f.body}</p>
             </div>
           ))}

@@ -147,7 +147,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="relative z-10 flex flex-col gap-2.5 p-5" style={{ background: "color-mix(in srgb, var(--bg) 55%, transparent)" }}>
         <div>
           <div className="flex items-center justify-between gap-2">
-            <h3 className="font-display text-lg font-semibold leading-tight">
+            <h3 className="text-lg font-bold leading-tight tracking-tight">
               <ViewTransitionLink
                 href={`/produto/${product.id}`}
                 className="transition-colors hover:text-[var(--accent)]"

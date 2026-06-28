@@ -150,7 +150,7 @@ export function ProductDetail({ product }: { product: Product }) {
             <p className="text-muted mb-2 text-xs uppercase tracking-[0.4em]">
               {product.anime} · {product.category}
             </p>
-            <h1 className="display-balance font-display text-4xl font-black leading-[0.98] tracking-tight text-glow sm:text-5xl">
+            <h1 className="display-balance text-4xl font-extrabold leading-[1.03] tracking-tight sm:text-5xl">
               {product.name}
             </h1>
             <p className="text-muted mt-5 max-w-md text-base leading-relaxed">
@@ -212,7 +212,7 @@ export function ProductDetail({ product }: { product: Product }) {
         {/* ---- relacionados ---- */}
         {related.length > 0 && (
           <section className="mt-24">
-            <h2 className="font-display text-xl font-semibold tracking-wide">
+            <h2 className="text-xl font-semibold tracking-tight">
               Mais de {product.anime}
             </h2>
             <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">

@@ -123,7 +123,7 @@ export function CartDrawer() {
             style={{ background: "color-mix(in srgb, var(--bg) 88%, transparent)" }}
           >
             <header className="flex items-center justify-between border-b border-current/10 px-6 py-5">
-              <h3 id="cart-title" className="font-display text-xl font-semibold">
+              <h3 id="cart-title" className="text-xl font-semibold tracking-tight">
                 Seu carrinho
                 <span className="ml-2 text-sm opacity-75">
                   ({lines.reduce((s, l) => s + l.qty, 0)})
