@@ -19,7 +19,9 @@ export function ProductCard({ product }: { product: Product }) {
   const [hovered, setHovered] = useState(false);
   const [burst, setBurst] = useState(false);
   const [toast, setToast] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const aura = auraFor(product);
+  const showImage = !!product.image && !imgError;
 
   const handleAdd = () => {
     add(product.id);
@@ -92,7 +94,7 @@ export function ProductCard({ product }: { product: Product }) {
 
         <ProductBadges product={product} disc={disc} />
 
-        {product.image ? (
+        {showImage ? (
           <div className="absolute inset-0">
             <motion.div
               className="relative h-full w-full"
@@ -105,9 +107,10 @@ export function ProductCard({ product }: { product: Product }) {
                 sizes="(max-width:640px) 100vw, 25vw"
                 className="object-contain p-6 select-none drop-shadow-[0_18px_30px_rgba(0,0,0,0.55)]"
                 alt={product.name}
-                src={product.image}
+                src={product.image as string}
                 draggable={false}
                 priority={false}
+                onError={() => setImgError(true)}
               />
             </motion.div>
           </div>

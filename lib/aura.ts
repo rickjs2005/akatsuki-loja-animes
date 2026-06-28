@@ -22,6 +22,7 @@ const AURAS: Record<string, string> = {
   tanjiro: "#29c2e0", // Respiração da Água — azul
   nezuko: "#ff5a8a", // Arte Demoníaca de Sangue — rosa
   levi: "#5fb0a8", // Tropa de Exploração — verde-aço
+  erwin: "#e0b84a", // Asas da Liberdade / comando — dourado
   saitama: "#f5c518", // Soco sério — amarelo
   killua: "#7fdfff", // Godspeed / raio — azul elétrico
 
@@ -33,6 +34,16 @@ const AURAS: Record<string, string> = {
   aizen: "#9b6cff", // Hogyoku — violeta
   muzan: "#d1206f", // sangue — magenta
   dio: "#ffd23b", // The World — dourado
+
+  // ===== Akatsuki 暁 =====
+  konan: "#7fb0ff", // Dança de Papel — azul
+  kisame: "#2fbfe0", // Suiton / Samehada — azul-água
+  deidara: "#ffb03b", // argila explosiva — laranja-ouro
+  sasori: "#d2452f", // Areia Vermelha / marionetes — vermelho
+  hidan: "#b23a5e", // ritual de Jashin — carmesim-magenta
+  kakuzu: "#2fc4a6", // fios de Doton / corações — verde-água
+  zetsu: "#4fbf63", // planta / clones — verde
+  obito: "#b23bff", // Kamui / Sharingan — roxo
 };
 
 export function auraFor(product: Product): string {
