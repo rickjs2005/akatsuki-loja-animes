@@ -33,6 +33,9 @@ type Ctx = {
   mode: PerfMode;
   lite: boolean;
   pref: PerfPref;
+  /** false no SSR e no 1º render do cliente; true após o mount. Use para só
+   *  montar fundos pesados depois da hidratação (evita hydration mismatch). */
+  ready: boolean;
   setPref: (p: PerfPref) => void;
   cyclePref: () => void;
 };
@@ -86,7 +89,14 @@ export function PerfModeProvider({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = useState<PerfMode>(() =>
     typeof window === "undefined" ? "full" : computeMode(readPref())
   );
+  // false no SSR e no 1º render; vira true após o mount. Os fundos pesados só
+  // montam quando `ready` é true → 1º render igual no servidor e no cliente.
+  const [ready, setReady] = useState(false);
   const watchdogDone = useRef(false);
+
+  useEffect(() => {
+    setReady(true);
+  }, []);
 
   const setPref = useCallback((p: PerfPref) => {
     try {
@@ -165,7 +175,7 @@ export function PerfModeProvider({ children }: { children: React.ReactNode }) {
   }, [pref, mode]);
 
   return (
-    <PerfCtx.Provider value={{ mode, lite: mode === "lite", pref, setPref, cyclePref }}>
+    <PerfCtx.Provider value={{ mode, lite: mode === "lite", ready, pref, setPref, cyclePref }}>
       {children}
     </PerfCtx.Provider>
   );

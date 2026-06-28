@@ -21,7 +21,7 @@ const BackgroundCanvas = dynamic(
 );
 
 export default function Home() {
-  const { lite } = usePerfMode();
+  const { lite, ready } = usePerfMode();
 
   return (
     <main id="top" className="relative">
@@ -36,8 +36,10 @@ export default function Home() {
       />
 
       {/* UM motor de fundo por modo (sem redundância):
-          full → cena WebGL 3D; lite → atmosfera 2D leve. */}
-      {lite ? <AtmosphereLayer /> : <BackgroundCanvas />}
+          full → cena WebGL 3D; lite → atmosfera 2D leve.
+          Só monta após o mount (ready) — no SSR/1º render fica só o fundo CSS,
+          igual nos dois lados, evitando hydration mismatch. */}
+      {ready && (lite ? <AtmosphereLayer /> : <BackgroundCanvas />)}
 
       {/* vinheta nas bordas — barata e presente nos dois modos (legibilidade) */}
       <div
