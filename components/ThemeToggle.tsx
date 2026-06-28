@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useTheme } from "./ThemeProvider";
+import { ThemeEye } from "./eyes/ThemeEye";
 
 export function ThemeToggle() {
   const { theme, toggle, isTransitioning } = useTheme();
@@ -11,29 +12,26 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       disabled={isTransitioning}
-      aria-label="Alternar tema"
-      className="group relative flex h-11 w-[88px] items-center rounded-full border border-[color-mix(in_srgb,var(--fg)_20%,transparent)] glass px-1.5 disabled:opacity-60"
+      aria-label={isLight ? "Ativar modo Uchiha (escuro)" : "Ativar modo Seis Olhos (claro)"}
+      title={isLight ? "Modo Satoru Gojo" : "Modo Uchiha"}
+      className="group relative flex h-11 w-[78px] items-center rounded-full px-1.5 transition-all duration-500 disabled:cursor-not-allowed"
+      style={{
+        border: `1px solid color-mix(in srgb, var(--accent) 45%, transparent)`,
+        background: isLight
+          ? "linear-gradient(120deg, rgba(190,243,255,0.18), rgba(43,123,255,0.12))"
+          : "linear-gradient(120deg, rgba(40,4,4,0.55), rgba(10,2,2,0.4))",
+        boxShadow: `0 0 18px -4px var(--accent), inset 0 0 14px -8px var(--accent)`,
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+      }}
     >
       <motion.span
         layout
-        transition={{ type: "spring", stiffness: 220, damping: 22 }}
+        transition={{ type: "spring", stiffness: 260, damping: 24 }}
         className="flex h-8 w-8 items-center justify-center rounded-full"
-        style={{
-          marginLeft: isLight ? "auto" : 0,
-          background: isLight
-            ? "radial-gradient(circle at 30% 30%, #bdf3ff, #2b7bff)"
-            : "radial-gradient(circle at 30% 30%, #ff5a3c, #8B0000)",
-          boxShadow: isLight
-            ? "0 0 22px 2px #3df0ff"
-            : "0 0 22px 2px #c81a1a",
-        }}
+        style={{ marginLeft: isLight ? "auto" : 0 }}
       >
-        <motion.span
-          animate={{ rotate: isLight ? 0 : 180 }}
-          className="text-[13px]"
-        >
-          {isLight ? "☀" : "☾"}
-        </motion.span>
+        <ThemeEye size={30} />
       </motion.span>
     </button>
   );

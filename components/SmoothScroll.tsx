@@ -4,10 +4,16 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
+  const reduced = usePrefersReducedMotion();
+
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
+
+    // reduced-motion: usa scroll nativo, sem Lenis.
+    if (reduced) return;
 
     const lenis = new Lenis({
       duration: 1.25,
@@ -28,7 +34,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       gsap.ticker.remove(raf);
       lenis.destroy();
     };
-  }, []);
+  }, [reduced]);
 
   return <>{children}</>;
 }

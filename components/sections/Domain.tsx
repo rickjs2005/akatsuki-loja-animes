@@ -32,7 +32,7 @@ export function Domain() {
           <h2 className="font-display text-4xl font-bold tracking-tight sm:text-6xl text-glow">
             DOIS MUNDOS, UM PORTAL
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl opacity-70">
+          <p className="mx-auto mt-5 max-w-2xl opacity-75">
             A troca entre Dark e Light é uma transformação cinematográfica — a
             lua se desfaz, a energia explode e o ambiente inteiro se reconstrói.
           </p>
@@ -56,7 +56,7 @@ export function Domain() {
                 {f.k}
               </span>
               <h3 className="mt-5 font-display text-xl font-semibold">{f.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed opacity-70">{f.body}</p>
+              <p className="mt-3 text-sm leading-relaxed opacity-75">{f.body}</p>
             </div>
           ))}
         </Reveal>

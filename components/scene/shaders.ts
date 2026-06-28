@@ -50,10 +50,12 @@ export const NOISE = /* glsl */ `
     return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
   }
 
+  // 2 oitavas (era 3) — metade-ish do custo por pixel; o fundo cinematográfico
+  // quase não muda, mas alivia bastante o desktop.
   float fbm(vec3 p){
     float v = 0.0;
     float a = 0.5;
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < 2; i++){
       v += a * snoise(p);
       p *= 2.02;
       a *= 0.5;

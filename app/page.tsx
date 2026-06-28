@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { Navbar } from "@/components/Navbar";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
+import { AtmosphereLayer } from "@/components/AtmosphereLayer";
 import { TransitionOverlay } from "@/components/TransitionOverlay";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { DragonBallCursor } from "@/components/DragonBallCursor";
@@ -22,6 +23,7 @@ export default function Home() {
   return (
     <main id="top" className="relative">
       <BackgroundCanvas />
+      <AtmosphereLayer />
       <TransitionOverlay />
       <DragonBallCursor />
       <WhatsAppFab />

@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "./CartProvider";
+import { CartIcon } from "@/components/icons";
 
 export function CartButton() {
   const { count, open } = useCart();
@@ -9,13 +10,9 @@ export function CartButton() {
     <button
       onClick={open}
       aria-label={`Abrir carrinho (${count} itens)`}
-      className="relative flex h-11 w-11 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--fg)_20%,transparent)] glass transition-colors hover:border-[var(--accent)]"
+      className="relative flex h-11 w-11 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--fg)_20%,transparent)] glass transition-colors hover:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:outline-none"
     >
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        <circle cx="9" cy="21" r="1" />
-        <circle cx="20" cy="21" r="1" />
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-      </svg>
+      <CartIcon />
       <AnimatePresence>
         {count > 0 && (
           <motion.span

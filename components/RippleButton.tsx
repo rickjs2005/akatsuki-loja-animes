@@ -33,11 +33,11 @@ export function RippleButton({
   };
 
   const base =
-    "ripple relative inline-flex items-center justify-center rounded-full px-8 py-3.5 text-sm font-semibold tracking-wide uppercase transition-all duration-300";
+    "ripple btn-cine relative inline-flex items-center justify-center rounded-full px-8 py-3.5 text-sm font-semibold tracking-wide uppercase transition-all duration-300";
   const styles =
     variant === "solid"
-      ? "text-white shadow-[0_0_30px_-4px_var(--accent)] hover:shadow-[0_0_55px_-2px_var(--accent)]"
-      : "border border-[color-mix(in_srgb,var(--fg)_25%,transparent)] text-[var(--fg)] hover:border-[var(--accent)]";
+      ? "text-white shadow-[0_0_30px_-4px_var(--accent)] hover:shadow-[0_0_60px_-2px_var(--accent)]"
+      : "border border-[color-mix(in_srgb,var(--fg)_25%,transparent)] text-[var(--fg)] hover:border-[var(--accent)] hover:shadow-[0_0_40px_-8px_var(--accent)]";
 
   return (
     <motion.button

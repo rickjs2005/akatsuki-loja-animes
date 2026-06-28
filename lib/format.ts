@@ -1,4 +1,4 @@
-// Helpers de e-commerce: preço, parcelamento, desconto, avaliação
+// Helpers de e-commerce: preço, parcelamento, desconto, frete
 
 export function parseBRL(v: string): number {
   // "R$ 229,90" -> 229.90
@@ -26,15 +26,6 @@ export function discountPct(price: string, oldPrice?: string): number | null {
   const o = parseBRL(oldPrice);
   if (!o || o <= p) return null;
   return Math.round((1 - p / o) * 100);
-}
-
-/** rating determinístico (sem hydration mismatch) a partir do id */
-export function ratingFor(id: string): { stars: number; reviews: number } {
-  let h = 0;
-  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
-  const stars = 4.5 + (h % 6) / 10; // 4.5 .. 5.0
-  const reviews = 28 + (h % 372); // 28 .. 399
-  return { stars: Math.min(5, stars), reviews };
 }
 
 export function freeShipping(price: string, threshold = 299): boolean {

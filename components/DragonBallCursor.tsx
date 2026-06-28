@@ -1,8 +1,29 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePrefersReducedMotion } from "@/components/usePrefersReducedMotion";
 
-/** Cursor custom em forma de Esfera do Dragão (4 estrelas). */
+/**
+ * Cursor custom em forma de Esfera do Dragão (4 estrelas).
+ *
+ * Acessibilidade / opt-out:
+ * - NÃO ativa quando `prefers-reduced-motion: reduce`.
+ * - NÃO ativa em telas sem ponteiro fino (touch).
+ * - É OPCIONAL via localStorage na chave "akatsuki-cursor" ("on" | "off").
+ *   Default (ausente) = "on".
+ *
+ * Alternar em runtime (de qualquer lugar do app):
+ *   window.dispatchEvent(new CustomEvent("akatsuki:cursor-toggle"));
+ * Isso inverte o estado (on <-> off), persiste no localStorage e
+ * habilita/desabilita o cursor imediatamente (montando/desmontando rAF,
+ * listeners e a classe `db-cursor` no <html>).
+ */
+
+const STORAGE_KEY = "akatsuki-cursor";
+const TOGGLE_EVENT = "akatsuki:cursor-toggle";
+
+type CursorPref = "on" | "off";
+
 export function DragonBallCursor() {
   const dot = useRef<HTMLDivElement>(null);
   const ring = useRef<HTMLDivElement>(null);
@@ -10,12 +31,52 @@ export function DragonBallCursor() {
   const ringPos = useRef({ x: -100, y: -100 });
   const target = useRef({ x: -100, y: -100 });
   const active = useRef(false);
-  const [enabled, setEnabled] = useState(false);
 
+  const prefersReduced = usePrefersReducedMotion();
+  const [pref, setPref] = useState<CursorPref>("on");
+  const [pointerFine, setPointerFine] = useState(false);
+
+  // Leitura inicial (cliente): tipo de ponteiro + preferência salva.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!window.matchMedia("(pointer: fine)").matches) return; // só desktop
-    setEnabled(true);
+    if (window.matchMedia) {
+      setPointerFine(window.matchMedia("(pointer: fine)").matches);
+    }
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+      setPref(stored === "off" ? "off" : "on");
+    } catch {
+      setPref("on");
+    }
+  }, []);
+
+  // Toggle em runtime via evento de window. Persiste e inverte.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onToggle = () => {
+      setPref((prev) => {
+        const next: CursorPref = prev === "on" ? "off" : "on";
+        try {
+          window.localStorage.setItem(STORAGE_KEY, next);
+        } catch {
+          /* ignora storage indisponível */
+        }
+        return next;
+      });
+    };
+    window.addEventListener(TOGGLE_EVENT, onToggle);
+    return () => window.removeEventListener(TOGGLE_EVENT, onToggle);
+  }, []);
+
+  // Só ativa com ponteiro fino, sem reduce-motion e com preferência "on".
+  const enabled = pointerFine && !prefersReduced && pref === "on";
+
+  // Efeito da esfera: adiciona a classe, monta rAF + listeners.
+  // Toda a montagem/desmontagem é guiada por `enabled`, então alternar
+  // em runtime monta/desmonta tudo automaticamente, sem vazamentos.
+  useEffect(() => {
+    if (!enabled) return;
+
     document.documentElement.classList.add("db-cursor");
 
     const onMove = (e: PointerEvent) => {
@@ -46,7 +107,7 @@ export function DragonBallCursor() {
       cancelAnimationFrame(raf);
       document.documentElement.classList.remove("db-cursor");
     };
-  }, []);
+  }, [enabled]);
 
   if (!enabled) return null;
 

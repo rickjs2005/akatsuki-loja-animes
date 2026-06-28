@@ -451,3 +451,8 @@ export const collectibles: Product[] = [
 ];
 
 export const allProducts = [...products, ...collectibles];
+
+/** Busca um produto por id (em figures + colecionáveis). */
+export function getProduct(id: string): Product | undefined {
+  return allProducts.find((p) => p.id === id);
+}

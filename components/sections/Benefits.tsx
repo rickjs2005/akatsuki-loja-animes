@@ -1,12 +1,24 @@
 "use client";
 
+import type { FC } from "react";
 import { Reveal } from "../Reveal";
+import {
+  ShippingIcon,
+  ShieldIcon,
+  CardIcon,
+  ChatIcon,
+  type IconProps,
+} from "@/components/icons";
 
-const benefits = [
-  { icon: "🚚", title: "Envio para todo o Brasil", desc: "Frete grátis acima de R$ 299" },
-  { icon: "🔒", title: "Compra 100% segura", desc: "Pagamento protegido" },
-  { icon: "💳", title: "Parcele em até 12x", desc: "Sem juros no cartão" },
-  { icon: "💬", title: "Atendimento humano", desc: "Direto no WhatsApp" },
+const benefits: {
+  Icon: FC<IconProps>;
+  title: string;
+  desc: string;
+}[] = [
+  { Icon: ShippingIcon, title: "Envio para todo o Brasil", desc: "Frete grátis acima de R$ 299" },
+  { Icon: ShieldIcon, title: "Compra 100% segura", desc: "Pagamento protegido" },
+  { Icon: CardIcon, title: "Parcele em até 12x", desc: "Sem juros no cartão" },
+  { Icon: ChatIcon, title: "Atendimento humano", desc: "Direto no WhatsApp" },
 ];
 
 export function Benefits() {
@@ -21,10 +33,12 @@ export function Benefits() {
             key={b.title}
             className="flex items-center gap-3 rounded-2xl glass px-4 py-4"
           >
-            <span className="text-2xl">{b.icon}</span>
+            <span style={{ color: "var(--accent)" }} className="shrink-0">
+              <b.Icon size={28} />
+            </span>
             <div className="leading-tight">
               <p className="text-sm font-semibold">{b.title}</p>
-              <p className="text-xs opacity-60">{b.desc}</p>
+              <p className="text-xs opacity-75">{b.desc}</p>
             </div>
           </div>
         ))}

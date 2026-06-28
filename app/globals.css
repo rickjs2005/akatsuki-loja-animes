@@ -3,14 +3,22 @@
 @tailwind utilities;
 
 :root {
+  /* MODO DARK — UCHIHA */
   --bg: #050505;
   --fg: #f3eaea;
   --accent: #c81a1a;
+  --accent-soft: #ff5a3c;
+  --accent-rgb: 200, 26, 26;
   --transition-progress: 0;
 }
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  /* combina controles nativos (scrollbars, inputs) com o tema escuro */
+  color-scheme: dark;
 }
 
 html,
@@ -25,9 +33,37 @@ body {
 }
 
 body[data-theme="light"] {
-  --bg: #eaf4ff;
+  /* MODO LIGHT — SATORU GOJO (Seis Olhos) */
+  --bg: #eef6ff;
   --fg: #06223f;
-  --accent: #2b7bff;
+  --accent: #1f6dff;
+  --accent-soft: #3df0ff;
+  --accent-rgb: 31, 109, 255;
+  /* controles nativos combinam com o tema claro */
+  color-scheme: light;
+}
+
+/* ===========================================================
+   ACESSIBILIDADE — Foco visível global (WCAG 2.4.7 / 2.4.11)
+   =========================================================== */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Reforço para elementos com border-radius grande/pill: anel via box-shadow
+   garante visibilidade mesmo quando o outline parece "cortado" pela borda. */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
 /* Lenis */
@@ -67,10 +103,25 @@ html.lenis body {
     0 0 42px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
+/* Texto secundário acessível — padroniza o "muted" no lugar de opacity-50/60 */
+.text-muted {
+  color: color-mix(in srgb, var(--fg) 78%, transparent);
+}
+
+/* Quebra equilibrada de títulos (display em Cinzel) + tracking para legibilidade
+   da serifada lapidar, sobretudo em tamanhos menores. */
+.display-balance {
+  text-wrap: balance;
+  letter-spacing: 0.01em;
+}
+
 .glass {
-  background: color-mix(in srgb, var(--bg) 45%, transparent);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  /* blur 8px (era 14): backdrop-filter recompõe sobre o canvas vivo a cada
+     frame — o raio menor é bem mais barato. Compensado com fundo um pouco
+     mais opaco para manter a legibilidade. */
+  backdrop-filter: blur(8px) saturate(135%);
+  -webkit-backdrop-filter: blur(8px) saturate(135%);
   border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
 }
 
@@ -137,4 +188,153 @@ html.lenis body {
 html.db-cursor,
 html.db-cursor * {
   cursor: none !important;
+}
+
+/* ===========================================================
+   OLHOS DOS TEMAS (Sharingan / Seis Olhos) — animações puras
+   =========================================================== */
+
+/* giro lento dos tomoe do Sharingan */
+.uchiha-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spin-cw linear infinite;
+}
+/* rotação quase imperceptível da íris do Gojo */
+.gojo-iris {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spin-ccw linear infinite;
+}
+/* shimmer holográfico do Gojo */
+.gojo-holo {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: holo-shift 7s ease-in-out infinite;
+}
+/* pulso suave do glow do olho */
+.eye-pulse {
+  animation: eye-pulse 5.5s ease-in-out infinite;
+}
+/* giro extremamente lento do olho gigante do hero */
+.hero-eye-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spin-cw linear infinite;
+}
+
+@keyframes spin-cw {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin-ccw {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes eye-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: var(--eye-op, 1);
+  }
+  50% {
+    transform: scale(1.035);
+    opacity: calc(var(--eye-op, 1) * 0.82);
+  }
+}
+@keyframes holo-shift {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateX(-6%) rotate(0deg);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateX(6%) rotate(8deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uchiha-spin,
+  .gojo-iris,
+  .gojo-holo,
+  .eye-pulse,
+  .hero-eye-spin {
+    animation: none !important;
+  }
+}
+
+/* ===========================================================
+   REDUÇÃO DE MOVIMENTO — reforço global
+   Neutraliza animações/transições longas (inclui marquee da
+   AnnouncementBar) preservando usabilidade e o foco visível.
+   =========================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+}
+
+/* ===========================================================
+   BOTÕES CINEMATOGRÁFICOS — glow + brilho passando no hover
+   =========================================================== */
+.btn-cine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+/* brilho/reflexo que atravessa o botão no hover */
+.btn-cine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    color-mix(in srgb, #fff 55%, transparent) 50%,
+    transparent 100%
+  );
+  transform: translateX(-130%) skewX(-18deg);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.btn-cine:hover::before {
+  transform: translateX(130%) skewX(-18deg);
+}
+
+/* ===========================================================
+   VIEW TRANSITIONS — morph de elemento compartilhado (card → PDP)
+   Progressive enhancement: só Chromium; demais navegadores navegam normal.
+   =========================================================== */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* a imagem do produto (view-transition-name product-*) interpola posição,
+   tamanho e opacidade entre o card e a página de produto. */
+::view-transition-group(*) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
 }
