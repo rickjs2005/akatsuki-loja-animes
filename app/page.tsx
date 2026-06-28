@@ -35,9 +35,19 @@ export default function Home() {
         }}
       />
 
-      {/* cena 3D só quando o aparelho aguenta (modo full) */}
-      {!lite && <BackgroundCanvas />}
-      <AtmosphereLayer />
+      {/* UM motor de fundo por modo (sem redundância):
+          full → cena WebGL 3D; lite → atmosfera 2D leve. */}
+      {lite ? <AtmosphereLayer /> : <BackgroundCanvas />}
+
+      {/* vinheta nas bordas — barata e presente nos dois modos (legibilidade) */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-[6]"
+        style={{
+          background:
+            "radial-gradient(120% 120% at 50% 50%, transparent 55%, color-mix(in srgb, var(--accent) 12%, transparent) 78%, color-mix(in srgb, var(--bg) 92%, black) 100%)",
+        }}
+      />
+
       <TransitionOverlay />
       <DragonBallCursor />
       <WhatsAppFab />

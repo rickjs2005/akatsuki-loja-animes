@@ -170,22 +170,13 @@ export function AtmosphereLayer() {
     };
   }, [morphRef]);
 
+  // Apenas o canvas 2D. A vinheta foi extraída para a página (usada em ambos os
+  // modos). Este componente é o fundo do MODO LEVE (sem WebGL).
   return (
-    <>
-      {/* vinheta nas bordas (radial-gradient é mais barato que box-shadow
-          gigante para repaint), themed via --accent */}
-      <div
-        className="pointer-events-none fixed inset-0 -z-[6]"
-        style={{
-          background:
-            "radial-gradient(120% 120% at 50% 50%, transparent 55%, color-mix(in srgb, var(--accent) 12%, transparent) 78%, color-mix(in srgb, var(--bg) 92%, black) 100%)",
-        }}
-      />
-      <canvas
-        ref={canvasRef}
-        className="pointer-events-none fixed inset-0 -z-[7]"
-        aria-hidden="true"
-      />
-    </>
+    <canvas
+      ref={canvasRef}
+      className="pointer-events-none fixed inset-0 -z-[7]"
+      aria-hidden="true"
+    />
   );
 }
