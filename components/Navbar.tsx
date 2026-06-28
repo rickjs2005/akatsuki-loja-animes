@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ThemeToggle } from "./ThemeToggle";
 import { CartButton } from "./CartButton";
+import { SettingsMenu } from "./SettingsMenu";
 
 const links = [
   { label: "Início", href: "#mundo" },
@@ -60,6 +61,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-3">
           <ThemeToggle />
+          <SettingsMenu />
           <CartButton />
         </div>
       </nav>

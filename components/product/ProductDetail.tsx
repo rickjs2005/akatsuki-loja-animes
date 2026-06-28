@@ -9,6 +9,7 @@ import { waLink, buyMessage } from "@/lib/whatsapp";
 import { auraFor } from "@/lib/aura";
 import { useCart } from "@/components/CartProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { SettingsMenu } from "@/components/SettingsMenu";
 import { CartButton } from "@/components/CartButton";
 import { SmartImage } from "@/components/SmartImage";
 import { ViewTransitionLink } from "@/components/ViewTransitionLink";
@@ -64,6 +65,7 @@ export function ProductDetail({ product }: { product: Product }) {
         </ViewTransitionLink>
         <div className="flex items-center gap-3">
           <ThemeToggle />
+          <SettingsMenu />
           <CartButton />
         </div>
       </header>
