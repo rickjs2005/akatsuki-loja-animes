@@ -27,6 +27,11 @@ export function Ritual() {
 
       <footer className="mx-auto mt-32 max-w-7xl border-t border-current/10 pt-10 text-center text-xs uppercase tracking-[0.3em] opacity-75">
         暁 AKATSUKI · Loja de animes · {new Date().getFullYear()}
+        <p className="mx-auto mt-4 max-w-2xl text-[10px] normal-case tracking-normal opacity-80">
+          Projeto demonstrativo fan-made de loja virtual, sem afiliação com os
+          detentores dos direitos dos personagens, marcas e obras exibidos.
+          Preços, avaliações e estoque são ilustrativos.
+        </p>
       </footer>
     </section>
   );
