@@ -1,56 +1,81 @@
-# 暁 AKATSUKI — Loja de Animes
+**English** · [Português](README.pt-BR.md)
 
-Loja de animes cinematográfica em 3D — **action figures, mangás e colecionáveis** de heróis e vilões dos maiores animes, com checkout direto pelo **WhatsApp**. Visual com lua vermelha, partículas, dois temas (Akatsuki / Expansão de Domínio) e **aura de energia por personagem** ao adicionar ao carrinho.
+# 暁 AKATSUKI — Anime Store
 
-![Loja AKATSUKI](docs/store.png)
+A cinematic 3D anime store demo — **action figures, manga and collectibles** of anime heroes and villains, with checkout straight to **WhatsApp**. Red moon, particles, two themes (Akatsuki / Domain Expansion) and a **per-character energy aura** when an item is added to the cart. The UI is in Brazilian Portuguese.
 
-> Projeto Next.js. Vendas via WhatsApp **(33) 99877-9375**.
+> **Type:** fan-made commercial demo (portfolio project) · **Demo:** https://akatsuki-loja-animes.vercel.app
+>
+> **Disclaimer:** this is a **fan-made, unofficial** project. "AKATSUKI" is a fictional store brand. The characters, names, works and trademarks shown (Naruto, One Piece, Dragon Ball, Jujutsu Kaisen, Demon Slayer, Attack on Titan, etc.) belong to their respective rights holders; this project is **not affiliated with, sponsored or endorsed by** them. Products, prices, ratings and stock are **illustrative**.
+
+![AKATSUKI store — catalog](docs/screenshots/store.png)
+
+![AKATSUKI store — hero, dark theme](docs/screenshots/hero.webp)
 
 ---
 
-## ✨ Funcionalidades
+## Features
 
-- **Catálogo de produtos** — 24 figures (17 heróis + 7 vilões), mangás (com capas oficiais), miniaturas e acessórios.
-- **Carrinho** — adicione vários itens e finalize tudo numa **única mensagem de WhatsApp**; persiste no `localStorage`. Ao adicionar, o card dispara a aura do personagem e o carrinho abre mostrando o item.
-- **Compra direta** — botão de WhatsApp em cada card com mensagem pré-preenchida (produto + preço).
-- **Filtros** — Todos / Heróis / Vilões / Mangás & Acessórios.
-- **Cara de e-commerce** — barra de promoções, faixa de benefícios, badge de desconto, avaliações (estrelas), parcelamento em 12x e tag de frete grátis.
-- **Dois temas cinematográficos** — 🌑 *Akatsuki* (escuro, lua vermelha) ⇄ ☀️ *Expansão de Domínio* (claro, energia azul), com transição animada.
-- **Aura de energia por personagem** 🔥 — ao adicionar ao carrinho, o card dá um *punch* (tremor + zoom) e sobem **chamas de energia na cor "lore" do personagem**: Naruto vermelho (Kurama), Goku prateado-azulado (Instinto Superior), Gojo azul (Limitless), Vegeta/Frieza/Dio dourado, Gon/Zoro verde, Killua azul elétrico, etc. Mapeada em `lib/aura.ts`. Enquanto o item está no carrinho, o card mantém uma aura pulsante.
-- **Cursor Esfera do Dragão** — cursor personalizado (4 estrelas) que segue o mouse (desktop).
-- **Cena 3D** — fundo com lua, névoa, partículas e parallax pelo movimento do mouse.
+- **Catalog** — 33 figures (18 heroes + 15 villains) and 8 collectibles (manga, miniatures and accessories), defined in `lib/products.ts`.
+- **Product page** — `/produto/[id]`, statically generated for every item.
+- **Cart** — add several items and check out everything in a **single WhatsApp message**; persisted in `localStorage`. Adding an item triggers the character's aura and opens the cart.
+- **Direct purchase** — a WhatsApp button on each card with a prefilled message (product + price).
+- **Filters** — All / Heroes / Villains / Manga & Accessories.
+- **E-commerce look** — promo bar, benefits strip, discount badge, rating stars (illustrative values), 12-installment pricing and free-shipping tag.
+- **Two cinematic themes** — *Akatsuki* (dark, red moon) ⇄ *Domain Expansion* (light, blue energy), with an animated transition.
+- **Per-character energy aura** — when added to the cart, the card shakes/zooms and flames rise in the character's "lore" color (mapped in `lib/aura.ts`). While the item is in the cart, the card keeps a pulsing aura.
+- **Performance panel** — Auto / 3D / Lite (lite mode disables WebGL on modest devices).
+- **Dragon Ball cursor** — optional custom cursor (desktop).
+- **3D scene** — moon, fog, particles and mouse parallax background.
+- **SEO** — metadata, generated OpenGraph image (`app/opengraph-image.tsx`), `robots.txt`, `sitemap.xml` and JSON-LD.
 
-## 🧱 Stack
+## Stack
 
-Next.js 14 · React 18 · TypeScript · Tailwind CSS · Three.js · React Three Fiber · drei · Framer Motion · GSAP (ScrollTrigger) · Lenis · GLSL shaders.
+Next.js 14.2 (App Router) · React 18 · TypeScript · Tailwind CSS 3 · Three.js · React Three Fiber · drei · Framer Motion · GSAP · Lenis · GLSL shaders.
 
-## 🚀 Rodando localmente
+## Running locally
+
+Requirements: Node.js 18.17+ (tested with Node 22) and npm.
 
 ```bash
-npm install
+npm ci
 npm run dev      # http://localhost:3000
 ```
 
-Build de produção:
+Production build:
 
 ```bash
 npm run build && npm start
 ```
 
-> A cena 3D precisa de **WebGL com GPU**. Em ambientes sem GPU (alguns headless), o fundo 3D pode aparecer preto — abra num navegador normal.
+No environment variables are required.
 
-## ⚙️ Como personalizar
+> The 3D scene needs **WebGL with a GPU**. In GPU-less environments (some headless browsers) the 3D background may render black — open it in a regular browser or switch to Lite mode.
 
-### Trocar o número do WhatsApp
-Edite `lib/whatsapp.ts`:
+### Scripts
+
+| Script | Description |
+| --- | --- |
+| `npm run dev` | Development server |
+| `npm run build` | Production build (includes type checking) |
+| `npm start` | Serve the production build |
+| `npm run lint` | `next lint` — ESLint is **not configured** in this project yet |
+
+## Customizing
+
+### Site URL
+`lib/site.ts` defines `SITE_URL`, used for canonical, OpenGraph, sitemap, robots and JSON-LD. Replace it with your domain.
+
+### WhatsApp number
+In the demo, purchase links point to MilWeb's business WhatsApp. To use your own, edit `lib/whatsapp.ts`:
 
 ```ts
-export const WHATSAPP_NUMBER = "5533998779375"; // 55 + DDD + número
-export const WHATSAPP_DISPLAY = "(33) 99877-9375";
+export const WHATSAPP_NUMBER = "55DDNNNNNNNNN"; // country code + area code + number
+export const WHATSAPP_DISPLAY = "(DD) NNNNN-NNNN";
 ```
 
-### Adicionar / editar produtos
-Tudo fica em `lib/products.ts`. Cada produto:
+### Products
+Everything lives in `lib/products.ts`. Each product:
 
 ```ts
 {
@@ -60,66 +85,68 @@ Tudo fica em `lib/products.ts`. Cada produto:
   anime: "Naruto Shippuden",
   kanji: "渦",
   category: "Figure",            // Figure | Mangá | Miniatura | Acessório
-  side: "hero",                  // hero | villain (opcional)
+  side: "hero",                  // hero | villain (optional)
   tagline: "O ninja que nunca desiste.",
   price: "R$ 189,90",
-  oldPrice: "R$ 249,90",         // opcional — gera o badge de desconto
+  oldPrice: "R$ 249,90",         // optional — renders the discount badge
   rarity: "Lendário",            // Comum | Raro | Lendário | Mítico
-  hue: "#ff8a1e",                // cor de destaque do card
-  image: "/characters/naruto.png", // opcional — sem imagem mostra um card com o kanji
+  hue: "#ff8a1e",                // card accent color
+  image: "/characters/naruto.png", // optional — without it the card shows the kanji
 }
 ```
 
-### Trocar as imagens dos produtos
-- Personagens: `public/characters/<id>.png` (renders com fundo transparente).
-- Capas de mangá: `public/manga/<id>.jpg`.
+### Images
+- Characters: `public/characters/<id>.png` (transparent-background renders).
+- Manga covers: `public/manga/<id>.jpg`.
 
-Basta substituir o arquivo (mesmo nome) ou apontar outro caminho em `image`. **Para uma loja real, o ideal é usar fotos reais do seu estoque.**
+Replace the file (same name) or point `image` to another path.
 
-### Aura por personagem
-A cor da aura disparada ao adicionar ao carrinho fica em `lib/aura.ts` (`auraFor`), mapeada por `id` do produto. Quem não está no mapa cai na cor-tema do produto (`hue`):
+### Per-character aura
+The aura color lives in `lib/aura.ts` (`auraFor`), keyed by product `id`; items not in the map fall back to the product `hue`. The animation lives in `components/ProductCard.tsx`.
 
-```ts
-const AURAS: Record<string, string> = {
-  naruto: "#ff3b1e",  // Manto da Kurama (9 caudas)
-  goku:   "#bfe6ff",  // Instinto Superior
-  gojo:   "#3aa0ff",  // Limitless / "Azul"
-  // ...
-};
-```
-
-A animação (chamas + tremor/zoom) vive em `components/ProductCard.tsx`.
-
-## 📁 Estrutura
+## Project structure
 
 ```
-app/                     # App Router (layout, página, estilos globais, icon.svg)
+app/                     # App Router (layout, page, produto/[id], OG image, robots, sitemap)
 components/
-  scene/                 # Cena 3D (Canvas, lua, partículas, nuvens, shaders GLSL)
-  sections/              # Hero, Benefits, Products, Domain, Ritual
-  CartProvider / CartDrawer / CartButton   # Carrinho
-  ProductCard            # Card de produto + aura por personagem
-  ThemeProvider / ThemeToggle / TransitionOverlay  # Temas + transição
-  Navbar / AnnouncementBar / WhatsAppFab / DragonBallCursor
+  scene/                 # 3D scene (Canvas, moon, particles, clouds, GLSL shaders)
+  sections/              # Hero, Benefits, Products, Domain, Ritual (footer)
+  product/               # Product page (detail, price, badges, aura)
+  eyes/                  # Animated theme eyes
+  CartProvider / CartDrawer / CartButton   # Cart
+  ProductCard            # Product card + per-character aura
+  ThemeProvider / ThemeToggle / TransitionOverlay  # Themes + transition
+  PerfModeProvider / SettingsMenu          # Performance mode
 lib/
-  products.ts            # Catálogo
-  aura.ts                # Cor da aura "lore" de cada personagem
-  whatsapp.ts            # Link e mensagens do WhatsApp
-  format.ts              # Preço, parcelamento, desconto, avaliação
+  products.ts            # Catalog
+  aura.ts                # Aura color per character
+  whatsapp.ts            # WhatsApp link and messages
+  format.ts              # Price, installments, discount, rating
+  site.ts                # Canonical URL
 public/
-  characters/            # Imagens dos personagens
-  manga/                 # Capas de mangá
+  characters/            # Character images
+  manga/                 # Manga covers
+docs/screenshots/        # Screenshots used in this README
 ```
 
-## ☁️ Deploy
+## Limitations
 
-Otimizado para [Vercel](https://vercel.com). É só importar o repositório — `npm run build` roda sem configuração extra.
+- No backend, payments, inventory or admin panel: an order is just a WhatsApp message.
+- Prices, discounts and ratings are static and illustrative.
+- No automated tests and no ESLint configuration.
 
-## 📝 Notas
+## Image credits
 
-- As imagens de personagens e capas são arte oficial usada como referência de produto. Para uso comercial, recomenda-se substituir pelas fotos reais do estoque.
-- A cena 3D é **code-split** (carrega só no cliente), mantendo o carregamento inicial leve.
+The character images (`public/characters/`) and manga covers (`public/manga/`) are third-party artwork tied to the original works, used only as visual reference in this demo; the exact origin of the files is not documented. All rights belong to their respective holders. For any real use, replace them with your own or properly licensed images.
 
----
+## Deployment
 
-Feito com 🔴 para fãs de anime.
+Built for [Vercel](https://vercel.com): import the repository — `npm run build` works with no extra configuration.
+
+## Security
+
+See [SECURITY.md](SECURITY.md).
+
+## License
+
+No license has been chosen yet; all rights reserved by the author. This applies only to the original code and design of this project — third-party characters and trademarks remain the property of their owners.
